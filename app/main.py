@@ -39,3 +39,11 @@ def main():
 def show_records(db: Session = Depends(get_db)):
     records = db.query(models.Record).all()
     return records
+
+@app.get("/API/Global")
+def global_route(db: Session = Depends(get_db)):
+    return 
+
+@app.get("/API/US")
+def usa_route(db: Session = Depends(get_db))
+    return

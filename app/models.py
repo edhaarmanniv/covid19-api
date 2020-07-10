@@ -31,21 +31,3 @@ class USADailyCases(Base):
     date = Column(Date)
     confirmed = Column(Integer)
     deaths = Column(Integer)
-
-
-# if __name__ == "__main__":
-#     from sqlalchemy.orm import Session
-#     from sqlalchemy import create_engine
-
-#     from connection import conn_string_proxy
-
-#     engine = create_engine(conn_string_proxy)
-#     global_daily_cases_db = Session(engine)
-#     print(
-#         [
-                
-#             for val in global_daily_cases_db.query(GlobalDailyCases).filter(
-#                 GlobalDailyCases.iso3 == "BRA"
-#             )
-#         ]
-#     )

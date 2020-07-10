@@ -42,12 +42,6 @@ def main():
     return RedirectResponse(url="/docs/")
 
 
-@app.get("/records/", response_model=List[schemas.Record])
-def show_records(db: Session = Depends(get_db)):
-    records = db.query(models.Record).all()
-    return records
-
-
 @app.get("/API/Global", response_model=List[schemas.GlobalDailyCases])
 async def global_route(
     db: Session = Depends(get_db),
@@ -55,7 +49,12 @@ async def global_route(
     end_date: date = end_date_default,
     iso3: str = iso3_default,
 ):
-    return
+    results = db.query(models.GlobalDailyCases).filter(GlobalDailyCases.date.between(start_date, end_date))
+
+    if iso3 != iso3_default:
+        results = results.filter(GlobalDailyCases.iso3==iso3)
+    
+    return results.all()
 
 
 @app.get("/API/US", response_model=List[schemas.USADailyCases])
@@ -66,4 +65,13 @@ async def usa_route(
     state: str = state_default,
     county: str = county_default,
 ):
-    return
+
+    results = db.query(models.USADailyCases).filter(USADailyCases.date.between(start_date, end_date))
+
+    if state != state_default:
+        results = results.filter(USADailyCases.province_state==state)
+    
+    if county != county_default:
+        results = results.filter(USADailyCases.county==county)
+
+    return results.all()

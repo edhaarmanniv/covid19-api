@@ -60,9 +60,13 @@ def load_global():
             datetime.datetime.strptime(report_date, "%m/%d/%y").date()
             for report_date in csv_headers[4:]
         ]
-        most_recent_date_index = reporting_dates.index(
-            most_recent_date
-        )  # add try except when checking for index/most recent
+        
+        if most_recent_date:
+            most_recent_date_index = reporting_dates.index(
+                most_recent_date
+            )
+        else:
+            most_recent_date_index = 0
 
         cc = coco.CountryConverter()
 

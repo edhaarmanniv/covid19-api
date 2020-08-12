@@ -15,7 +15,7 @@ from sqlalchemy.orm import Session
 from .database import SessionLocal, engine
 from . import models
 
-Base = declarative_base()
+models.Base.metadata.create_all(bind=engine)
 
 app = Flask(__name__)
 

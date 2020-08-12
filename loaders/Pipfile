@@ -7,12 +7,10 @@ verify_ssl = true
 
 [packages]
 flask = "*"
-pandas = "*"
 requests = "*"
 sqlalchemy = "*"
 gunicorn = "*"
 country-converter = "*"
-lxml = "*"
 pymysql = "*"
 
 [requires]

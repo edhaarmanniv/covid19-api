@@ -12,6 +12,8 @@ from sqlalchemy import create_engine, func
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session
 
+from .database import SessionLocal, engine
+
 from connection import conn_string_proxy, conn_string_deploy
 
 Base = declarative_base()
@@ -55,18 +57,7 @@ def before_request():
 @app.route("/load_global")
 def load_global():
 
-    # Connect to the "Covid" database
-
-    # Change connection_string to conn_string_proxy when connecting locally
-    # via proxy and to conn_string_deploy when being uploaded for GCP.
-
-    connection_string = conn_string_deploy
-
-    engine = create_engine(connection_string)
-
-    Base.metadata.create_all(engine)
-
-    session = Session(bind=engine)
+    session = SessionLocal()
 
     # get most recent upload date to minimized sql transactions
     most_recent_date = session.query(func.max(GlobalDailyCases.date)).all()[0][0]
@@ -152,13 +143,7 @@ def load_global():
 @app.route("/load_usa")
 def load_use():
 
-    connection_string = conn_string_deploy
-
-    engine = create_engine(connection_string)
-
-    Base.metadata.create_all(engine)
-
-    session = Session(bind=engine)
+    session = SessionLocal()
 
     # get most recent upload date to minimized sql transactions
     most_recent_date = session.query(func.max(USADailyCases.date)).all()[0][0]

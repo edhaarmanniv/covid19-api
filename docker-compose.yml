@@ -21,9 +21,11 @@ services:
         build:
             context: ./
             dockerfile: Dockerfile
-        command: gunicorn --bind :8000 --preload --workers 1 --threads 8 app.loader_app:app
         environment: 
+            - FLASK_APP=app/loader_app.py
+            - FLASK_DEBUG=development
             - DB_CONN=mysql+pymysql://root:password@mysql:3306/database
+        command: flask run --host=0.0.0.0 --port=8000
         ports:
             - "8000:8000"
         depends_on: 

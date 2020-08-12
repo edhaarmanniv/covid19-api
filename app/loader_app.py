@@ -13,38 +13,9 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session
 
 from .database import SessionLocal, engine
-
-from connection import conn_string_proxy, conn_string_deploy
+from . import models
 
 Base = declarative_base()
-
-
-class GlobalDailyCases(Base):
-    __tablename__ = "daily_cases"
-    index = Column(BigInteger, primary_key=True, nullable=False)
-    country_region = Column(Text)
-    province_state = Column(Text)
-    lat = Column(Float)
-    long = Column(Float)
-    date = Column(Date)
-    confirmed = Column(BigInteger)
-    deaths = Column(BigInteger)
-    recovered = Column(Integer)
-    iso3 = Column(Text)
-
-class USADailyCases(Base):
-    __tablename__ = "usa_covid19"
-    index = Column(BigInteger, primary_key=True)
-    country_region = Column(Text)
-    province_state = Column(Text)
-    county_city = Column(Text)
-    lat = Column(Float)
-    long = Column(Float)
-    date = Column(Date)
-    confirmed = Column(BigInteger)
-    deaths = Column(BigInteger)
-
-
 
 app = Flask(__name__)
 
@@ -60,7 +31,7 @@ def load_global():
     session = SessionLocal()
 
     # get most recent upload date to minimized sql transactions
-    most_recent_date = session.query(func.max(GlobalDailyCases.date)).all()[0][0]
+    most_recent_date = session.query(func.max(models.GlobalDailyCases.date)).all()[0][0]
 
     coco.logging.getLogger().setLevel(coco.logging.CRITICAL)
 
@@ -117,7 +88,7 @@ def load_global():
                 reporting_dates[most_recent_date_index:],
                 start=4 + most_recent_date_index,
             ):
-                record = GlobalDailyCases(
+                record = models.GlobalDailyCases(
                     **{
                         "country_region": country_region_short,
                         "province_state": province_state,
@@ -146,7 +117,7 @@ def load_use():
     session = SessionLocal()
 
     # get most recent upload date to minimized sql transactions
-    most_recent_date = session.query(func.max(USADailyCases.date)).all()[0][0]
+    most_recent_date = session.query(func.max(models.USADailyCases.date)).all()[0][0]
 
     ### USA Covid19 Data
 
@@ -190,7 +161,7 @@ def load_use():
                 reporting_dates[most_recent_date_index:],
                 start=11 + most_recent_date_index,
             ):
-                record = USADailyCases(
+                record = models.USADailyCases(
                     **{
                         "country_region": country_region,
                         "province_state": province_state,

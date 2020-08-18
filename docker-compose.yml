@@ -1,0 +1,32 @@
+version: "3.8"
+services:
+    mysql:
+        image: mysql:5.7
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: password
+            MYSQL_DATABASE: database
+    app:
+        build:
+            context: ./
+            dockerfile: Dockerfile
+        environment: 
+            - PORT=8000
+            - DB_CONN=mysql+pymysql://root:password@mysql:3306/database
+        ports:
+            - "80:8000"
+        depends_on: 
+            - mysql
+    loader:
+        build:
+            context: ./
+            dockerfile: Dockerfile
+        environment: 
+            - FLASK_APP=app/loader_app.py
+            - FLASK_DEBUG=development
+            - DB_CONN=mysql+pymysql://root:password@mysql:3306/database
+        command: flask run --host=0.0.0.0 --port=8000
+        ports:
+            - "8000:8000"
+        depends_on: 
+            - mysql

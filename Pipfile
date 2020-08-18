@@ -13,6 +13,11 @@ uvicorn = "*"
 starlette = "*"
 gunicorn = "*"
 pymysql = "*"
+country-converter = "*"
+requests = "*"
+flask = "*"
+
+
 
 [requires]
 python_version = "3.7"
